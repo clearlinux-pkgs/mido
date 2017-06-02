@@ -4,7 +4,7 @@
 #
 Name     : mido
 Version  : 1.2.7
-Release  : 6
+Release  : 7
 URL      : https://pypi.debian.net/mido/mido-1.2.7.tar.gz
 Source0  : https://pypi.debian.net/mido/mido-1.2.7.tar.gz
 Summary  : MIDI Objects for Python
