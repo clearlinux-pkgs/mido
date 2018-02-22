@@ -4,14 +4,13 @@
 #
 Name     : mido
 Version  : 1.2.8
-Release  : 13
+Release  : 14
 URL      : https://pypi.debian.net/mido/mido-1.2.8.tar.gz
 Source0  : https://pypi.debian.net/mido/mido-1.2.8.tar.gz
 Summary  : MIDI Objects for Python
 Group    : Development/Tools
 License  : MIT
 Requires: mido-bin
-Requires: mido-legacypython
 Requires: mido-python3
 Requires: mido-python
 BuildRequires : pbr
@@ -45,7 +44,6 @@ legacypython components for the mido package.
 %package python
 Summary: python components for the mido package.
 Group: Default
-Requires: mido-legacypython
 Requires: mido-python3
 
 %description python
@@ -69,12 +67,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1507160266
+export SOURCE_DATE_EPOCH=1519318479
 python2 setup.py build -b py2
 python3 setup.py build -b py3
 
 %install
-export SOURCE_DATE_EPOCH=1507160266
+export SOURCE_DATE_EPOCH=1519318479
 rm -rf %{buildroot}
 python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
 python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
