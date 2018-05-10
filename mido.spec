@@ -4,7 +4,7 @@
 #
 Name     : mido
 Version  : 1.2.8
-Release  : 14
+Release  : 15
 URL      : https://pypi.debian.net/mido/mido-1.2.8.tar.gz
 Source0  : https://pypi.debian.net/mido/mido-1.2.8.tar.gz
 Summary  : MIDI Objects for Python
