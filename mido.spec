@@ -4,7 +4,7 @@
 #
 Name     : mido
 Version  : 1.2.8
-Release  : 20
+Release  : 21
 URL      : https://pypi.debian.net/mido/mido-1.2.8.tar.gz
 Source0  : https://pypi.debian.net/mido/mido-1.2.8.tar.gz
 Summary  : MIDI Objects for Python
@@ -12,12 +12,15 @@ Group    : Development/Tools
 License  : MIT
 Requires: mido-bin
 Requires: mido-python3
+Requires: mido-license
 Requires: mido-python
 BuildRequires : pbr
 BuildRequires : pip
-
+BuildRequires : python-core
+BuildRequires : python3-core
 BuildRequires : python3-dev
 BuildRequires : setuptools
+BuildRequires : setuptools-legacypython
 
 %description
 ==============================
@@ -27,6 +30,7 @@ BuildRequires : setuptools
 %package bin
 Summary: bin components for the mido package.
 Group: Binaries
+Requires: mido-license
 
 %description bin
 bin components for the mido package.
@@ -39,6 +43,14 @@ Requires: python-core
 
 %description legacypython
 legacypython components for the mido package.
+
+
+%package license
+Summary: license components for the mido package.
+Group: Default
+
+%description license
+license components for the mido package.
 
 
 %package python
@@ -67,13 +79,16 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1519318479
+export SOURCE_DATE_EPOCH=1530373065
 python2 setup.py build -b py2
 python3 setup.py build -b py3
 
 %install
-export SOURCE_DATE_EPOCH=1519318479
+export SOURCE_DATE_EPOCH=1530373065
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/mido
+cp LICENSE %{buildroot}/usr/share/doc/mido/LICENSE
+cp docs/license.rst %{buildroot}/usr/share/doc/mido/docs_license.rst
 python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
 python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
 echo ----[ mark ]----
@@ -93,6 +108,11 @@ echo ----[ mark ]----
 %files legacypython
 %defattr(-,root,root,-)
 /usr/lib/python2*/*
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/mido/LICENSE
+/usr/share/doc/mido/docs_license.rst
 
 %files python
 %defattr(-,root,root,-)
