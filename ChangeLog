@@ -7,6 +7,50 @@ Changes
 Release History
 ---------------
 
+1.2.9 (2018-10-05)
+^^^^^^^^^^^^^^^^^^
+
+* rewrote ``Parser`` class around a MIDI tokenizer. Should lead to
+  slight speedup and much cleaner code.
+
+* bugfix: `data` attribute was missing for `UnknownMetaMessage`
+  objects. This caused `AttributeError` when the messages were printed
+  or saved to a file. Also, the documentation incorrectly listed the
+  attribute as `_data` instead of `data`. (Reported by Groowy.)
+
+* bugfix: UnknownMetaMessage encoding was broken causing crashes when
+  saving a file with unknown meta messages. (Reported by exeex, issue
+  #159.)
+
+* bugfix: inputs and outputs were switched around when opening named
+  ports with PortMidi backend. (Reproduced by Predrag Radovic, issue
+  #108, fix by Juan Antonio Aldea, pull request #109.)
+
+* bugfix: time signature meta messages had wrong default value of
+  2/4. The default value is now 4/4. (Fix by Sebastian Böck, pull
+  request #104.)
+
+* bugfix: ``msg.copy()`` didn't handle generators for sysex
+  data. ``msg.copy(data=(i for i in range(3)))`` would give
+  ``data=()`` instead of ``data=(0,1,2)``.
+
+  (The code should be refactored so this is handled by the same
+  function everywhere, such as in ``__init__()``, in ``copy()`` and in
+  ``parser.feed()``.)
+
+* bugfix: ``MultiPort._receive()`` ignored the ``block``
+  parameter. (Fix by Tom Swirly, pull request #135.)
+
+* bugfix: sequencer number meta message was incorrectly limited to
+  range 0..255 instead of 0..65335. (Reported by muranyia, issue
+  #144.)
+
+* now using Tox for testing. (Implemented by Chris Apple, pull request
+  #123.)
+
+* Travis integration up by Carl Thomé and Chris Apple.
+
+
 1.2.8 (2017-06-30)
 ^^^^^^^^^^^^^^^^^^
 
@@ -24,7 +68,7 @@ Release History
 * added max length when reading message from a MIDI file. This
   prevents Python from running out of memory when reading a corrupt
   file. Instead it will now raise an ``IOError`` with a descriptive
-  error message. (Implented by Curtis Hawthorne, pull request #95.)
+  error message. (Implemented by Curtis Hawthorne, pull request #95.)
 
 * removed dependency on ``python-rtmidi`` from tests. (Reported by
   Josue Ortega, issue #96.)
@@ -284,7 +328,7 @@ Other changes:
   ``parser.messages``. ``BaseInput`` and ``SocketPort`` use it so it
   should be public.
 
-* ``Parser()`` now takes an option arugment ``data`` which is passed
+* ``Parser()`` now takes an option argument ``data`` which is passed
   to ``feed()``.
 
 
