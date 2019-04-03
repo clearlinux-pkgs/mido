@@ -4,7 +4,7 @@
 #
 Name     : mido
 Version  : 1.2.9
-Release  : 29
+Release  : 30
 URL      : https://files.pythonhosted.org/packages/47/a8/f05e3e6491568de9e03506a869a6039e2892d8350809203bd9abcf4b17a8/mido-1.2.9.tar.gz
 Source0  : https://files.pythonhosted.org/packages/47/a8/f05e3e6491568de9e03506a869a6039e2892d8350809203bd9abcf4b17a8/mido-1.2.9.tar.gz
 Summary  : MIDI Objects for Python
@@ -14,7 +14,6 @@ Requires: mido-bin = %{version}-%{release}
 Requires: mido-license = %{version}-%{release}
 Requires: mido-python = %{version}-%{release}
 Requires: mido-python3 = %{version}-%{release}
-BuildRequires : buildreq-distutils23
 BuildRequires : buildreq-distutils3
 BuildRequires : pluggy
 BuildRequires : py-python
@@ -23,7 +22,10 @@ BuildRequires : tox
 BuildRequires : virtualenv
 
 %description
+Mido - MIDI Objects for Python
 ==============================
+.. image:: https://travis-ci.org/olemb/mido.svg?branch=master
+:target: https://travis-ci.org/olemb/mido
 
 %package bin
 Summary: bin components for the mido package.
@@ -32,15 +34,6 @@ Requires: mido-license = %{version}-%{release}
 
 %description bin
 bin components for the mido package.
-
-
-%package legacypython
-Summary: legacypython components for the mido package.
-Group: Default
-Requires: python-core
-
-%description legacypython
-legacypython components for the mido package.
 
 
 %package license
@@ -77,18 +70,17 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1541267824
-python2 setup.py build -b py2
-python3 setup.py build -b py3
+export SOURCE_DATE_EPOCH=1554322486
+export MAKEFLAGS=%{?_smp_mflags}
+python3 setup.py build
 
 %install
-export SOURCE_DATE_EPOCH=1541267824
+export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/mido
 cp LICENSE %{buildroot}/usr/share/package-licenses/mido/LICENSE
 cp docs/license.rst %{buildroot}/usr/share/package-licenses/mido/docs_license.rst
-python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
-python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
+python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
@@ -102,10 +94,6 @@ echo ----[ mark ]----
 /usr/bin/mido-play
 /usr/bin/mido-ports
 /usr/bin/mido-serve
-
-%files legacypython
-%defattr(-,root,root,-)
-/usr/lib/python2*/*
 
 %files license
 %defattr(0644,root,root,0755)
