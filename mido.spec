@@ -4,7 +4,7 @@
 #
 Name     : mido
 Version  : 1.2.9
-Release  : 35
+Release  : 36
 URL      : https://files.pythonhosted.org/packages/47/a8/f05e3e6491568de9e03506a869a6039e2892d8350809203bd9abcf4b17a8/mido-1.2.9.tar.gz
 Source0  : https://files.pythonhosted.org/packages/47/a8/f05e3e6491568de9e03506a869a6039e2892d8350809203bd9abcf4b17a8/mido-1.2.9.tar.gz
 Summary  : MIDI Objects for Python
@@ -24,8 +24,140 @@ BuildRequires : virtualenv
 %description
 Mido - MIDI Objects for Python
 ==============================
+
 .. image:: https://travis-ci.org/olemb/mido.svg?branch=master
-:target: https://travis-ci.org/olemb/mido
+    :target: https://travis-ci.org/olemb/mido
+
+Mido is a library for working with MIDI messages and ports. It's
+designed to be as straight forward and Pythonic as possible:
+
+.. code-block:: python
+
+   >>> import mido
+   >>> msg = mido.Message('note_on', note=60)
+   >>> msg.type
+   'note_on'
+   >>> msg.note
+   60
+   >>> msg.bytes()
+   [144, 60, 64]
+   >>> msg.copy(channel=2)
+   <message note_on channel=2 note=60 velocity=64 time=0>
+
+.. code-block:: python
+
+   port = mido.open_output('Port Name')
+   port.send(msg)
+
+.. code-block:: python
+
+    with mido.open_input() as inport:
+        for msg in inport:
+            print(msg)
+
+.. code-block:: python
+
+    mid = mido.MidiFile('song.mid')
+    for msg in mid.play():
+        port.send(msg)
+
+
+Full documentation at https://mido.readthedocs.io/
+
+
+Main Features
+-------------
+
+* works in Python 2 and 3.
+
+* convenient message objects.
+
+* supports RtMidi, PortMidi and Pygame. New backends are easy to
+  write.
+
+* full support for all 18 messages defined by the MIDI standard.
+
+* standard port API allows all kinds of input and output ports to be
+  used interchangeably. New port types can be written by subclassing
+  and overriding a few methods.
+
+* includes a reusable MIDI parser.
+
+* full support for MIDI files (read, write, create and play) with
+  complete access to every message in the file, including all common
+  meta messages.
+
+* can read and write SYX files (binary and plain text).
+
+* implements (somewhat experimental) MIDI over TCP/IP with socket
+  ports. This allows for example wireless MIDI between two
+  computers.
+
+* includes programs for playing MIDI files, listing ports and
+  serving and forwarding ports over a network.
+
+
+Status
+------
+
+1.2 is the third stable release.
+
+
+Requirements
+------------
+
+Mido targets Python 2.7 and 3.2.
+
+
+Installing
+----------
+
+::
+
+    pip install mido
+
+If you want to use ports::
+
+   pip install python-rtmidi
+
+See ``docs/backends/`` for other backends.
+
+
+
+Source Code
+-----------
+
+https://github.com/olemb/mido/
+
+
+License
+-------
+
+Mido is released under the terms of the `MIT license
+<http://en.wikipedia.org/wiki/MIT_License>`_.
+
+
+Questions and suggestions
+-------------------------
+
+Please ask questions about Mido at
+https://groups.google.com/forum/#!forum/mido-community.
+
+This mailing list was created to give both the user community a place to ask
+and hopefully also answer questions and for the developers a space to discuss
+Mido development. The success of the mailing list will depend on the community
+effort to also answer questions.
+
+
+Looking for maintainers
+-----------------------
+
+This project is looking for somebody to take over the maintenance since the
+original author @olemb is busy with other projects. We look for somebody or a
+group of people who care about the code and would like to steer this project in
+future by discussing proposals, reviewing pull requests, and looking over
+issues. Please write to mido-community@googlegroups.com if you would like to
+help out with maintenance.
 
 %package bin
 Summary: bin components for the mido package.
@@ -57,6 +189,7 @@ python components for the mido package.
 Summary: python3 components for the mido package.
 Group: Default
 Requires: python3-core
+Provides: pypi(mido)
 
 %description python3
 python3 components for the mido package.
@@ -64,13 +197,20 @@ python3 components for the mido package.
 
 %prep
 %setup -q -n mido-1.2.9
+cd %{_builddir}/mido-1.2.9
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1554322486
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1583173570
+# -Werror is for werrorists
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$CFLAGS -fno-lto "
+export FFLAGS="$CFLAGS -fno-lto "
+export CXXFLAGS="$CXXFLAGS -fno-lto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
 
@@ -78,8 +218,8 @@ python3 setup.py build
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/mido
-cp LICENSE %{buildroot}/usr/share/package-licenses/mido/LICENSE
-cp docs/license.rst %{buildroot}/usr/share/package-licenses/mido/docs_license.rst
+cp %{_builddir}/mido-1.2.9/LICENSE %{buildroot}/usr/share/package-licenses/mido/f249aa8ed0a0afb411524a251fdc63adeb390612
+cp %{_builddir}/mido-1.2.9/docs/license.rst %{buildroot}/usr/share/package-licenses/mido/f243d53f50ec9a04ef1bdf42262d8e9c6481e5ee
 python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
@@ -97,8 +237,8 @@ echo ----[ mark ]----
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/mido/LICENSE
-/usr/share/package-licenses/mido/docs_license.rst
+/usr/share/package-licenses/mido/f243d53f50ec9a04ef1bdf42262d8e9c6481e5ee
+/usr/share/package-licenses/mido/f249aa8ed0a0afb411524a251fdc63adeb390612
 
 %files python
 %defattr(-,root,root,-)
