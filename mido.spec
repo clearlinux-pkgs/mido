@@ -4,7 +4,7 @@
 #
 Name     : mido
 Version  : 1.2.10
-Release  : 52
+Release  : 53
 URL      : https://files.pythonhosted.org/packages/57/1f/b067eed2314c13481e354dd32560c1d9f45d516dd44d9751b85e0e9798fc/mido-1.2.10.tar.gz
 Source0  : https://files.pythonhosted.org/packages/57/1f/b067eed2314c13481e354dd32560c1d9f45d516dd44d9751b85e0e9798fc/mido-1.2.10.tar.gz
 Summary  : MIDI Objects for Python
